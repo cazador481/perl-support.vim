@@ -1004,7 +1004,9 @@ function! Perl_SyntaxCheck ()
 		" no whitespaces
     " Errorformat from compiler/perl.vim (VIM distribution).
     "
-    exe ':set makeprg=perl\ -c'
+    let perl_ver=getline(1)
+    let perl_ver= strpart(perl_ver,2)
+    exe ':set makeprg='.perl_ver.'\ -c'
     exe ':setlocal errorformat=
         \%-G%.%#had\ compilation\ errors.,
         \%-G%.%#syntax\ OK,
@@ -1100,6 +1102,8 @@ function! Perl_Run ()
     echohl WarningMsg | echo expand("%:p").' seems not to be a Perl file' | echohl None
     return
   endif
+  let perl_ver=getline(1)
+  let perl_ver= strpart(perl_ver,2)
   let buffername  = expand("%")
   if fnamemodify( s:Perl_PerlModuleList, ":p:t" ) == buffername || s:Perl_PerldocBufferName == buffername
     return
@@ -1124,7 +1128,8 @@ function! Perl_Run ()
     if  s:MSWIN
       exe "!perl ".l:switches.'"'.l:fullname.'" '.l:arguments
     else
-      exe "!perl ".l:switches.l:fullname_esc.l:arguments
+      exe "!"perl_ver." ".l:switches.l:fullname_esc.l:arguments
+"      exe "!perl ".l:switches.l:fullname_esc.l:arguments
     endif
     "
   endif
